@@ -16,7 +16,7 @@ app.use(cors());
 const TOKEN = process.env.GITHUB_TOKEN;
 
 if (!TOKEN) {
-  console.warn("WARNING: GITHUB_TOKEN belum di-set di environment");
+  console.warn("WARNING: GITHUB_TOKEN is not Devined!");
 }
 
 // ===================================================================================

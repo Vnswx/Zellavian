@@ -92,7 +92,7 @@ export async function generateLangCard(data, theme = "radical") {
       <rect width="100%" height="100%" fill="#D9D9D9" rx="15"></rect>
 
       <image x="70" href="data:image/png;base64,${cyberImg}" width="221"/>
-      <text x="115" y="35" font-size="25" fill="#464545" style="font-family: 'Jacquard 12';">
+      <text x="125" y="35" font-size="25" fill="#464545" style="font-family: 'Jacquard 12';">
         Language Used
       </text>
 

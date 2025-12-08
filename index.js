@@ -48,7 +48,7 @@ app.get("/api/top-langs", async (req, res) => {
         }
       }
   
-      const svg = generateLangCard({ languages: languageStats }, theme);
+      const svg = await generateLangCard({ languages: languageStats }, theme);
   
       res.setHeader("Content-Type", "image/svg+xml");
       return res.send(svg);

@@ -1,9 +1,5 @@
-import fs from "fs";
-
-const jacquardFont = fs.readFileSync("public/fonts/Jacquard12-Regular.woff").toString("base64");
-const pixelifyFont = fs.readFileSync("public/fonts/PixelifySans.woff").toString("base64");
-
-window.generateLangCard = function (data, theme = "radical") {
+// Tidak perlu fs lagi
+window.generateLangCard = async function (data, theme = "radical") {
   const themes = {
     radical: { bg: "#141321", text: "#ffffff", title: "#fe428e" },
     dark: { bg: "#0d1117", text: "#c9d1d9", title: "#58a6ff" }
@@ -11,6 +7,19 @@ window.generateLangCard = function (data, theme = "radical") {
 
   const t = themes[theme] || themes.radical;
 
+  // --- FETCH WOFF FONTS FROM PUBLIC URL ---
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+  
+  const jacquardBuffer = await fetch(`${baseURL}/fonts/Jacquard12-Regular.woff`)
+    .then((res) => res.arrayBuffer());
+
+  const pixelifyBuffer = await fetch(`${baseURL}/fonts/PixelifySans.woff`)
+    .then((res) => res.arrayBuffer());
+
+  const jacquardFont = Buffer.from(jacquardBuffer).toString("base64");
+  const pixelifyFont = Buffer.from(pixelifyBuffer).toString("base64");
+
+  // ------------------- LANGUAGE DATA -------------------
   const langs = Object.entries(data.languages);
   const total = langs.reduce((sum, [, bytes]) => sum + bytes, 0);
 
@@ -77,15 +86,11 @@ window.generateLangCard = function (data, theme = "radical") {
         @font-face {
           font-family: "Jacquard 12";
           src: url(data:font/woff;base64,${jacquardFont}) format("woff");
-          font-weight: normal;
-          font-style: normal;
         }
 
         @font-face {
           font-family: "Pixelify Sans";
           src: url(data:font/woff;base64,${pixelifyFont}) format("woff");
-          font-weight: normal;
-          font-style: normal;
         }
       </style>
 

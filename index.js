@@ -1,9 +1,11 @@
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import { generateLangCard } from "./svg.js";
 
 const app = express();
 app.use(cors());
+
 
 // -----------------------------------------------------------------------------------
 // IMPORTANT NOTE:
@@ -21,49 +23,40 @@ if (!TOKEN) {
 // API: /api/top-langs
 // ===================================================================================
 app.get("/api/top-langs", async (req, res) => {
-  const username = req.query.username;
-
-  if (!username) {
-    return res.status(400).json({ error: "username is required" });
-  }
-
-  try {
-    const repos = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&type=all`, {
-      headers: {
-        Authorization: `token ${TOKEN}`
-      }
-    }).then(r => r.json());
-
-    if (!Array.isArray(repos)) {
-      return res.status(500).json({ error: "Failed fetching repositories" });
+    const username = req.query.username;
+    const theme = req.query.theme || "radical";
+  
+    if (!username) {
+      return res.status(400).send("username is required");
     }
-
-    let languageStats = {};
-
-    for (const repo of repos) {
-      const langs = await fetch(repo.languages_url, {
-        headers: { Authorization: `token ${TOKEN}` }
-      }).then(r => r.json());
-
-      for (const [lang, bytes] of Object.entries(langs)) {
-        languageStats[lang] = (languageStats[lang] || 0) + bytes;
+  
+    try {
+      const repos = await fetch(
+        `https://api.github.com/users/${username}/repos?per_page=100&type=all`,
+        { headers: { Authorization: `token ${TOKEN}` } }
+      ).then(r => r.json());
+  
+      let languageStats = {};
+  
+      for (const repo of repos) {
+        const langs = await fetch(repo.languages_url, {
+          headers: { Authorization: `token ${TOKEN}` }
+        }).then(r => r.json());
+  
+        for (const [lang, bytes] of Object.entries(langs)) {
+          languageStats[lang] = (languageStats[lang] || 0) + bytes;
+        }
       }
+  
+      const svg = generateLangCard({ languages: languageStats }, theme);
+  
+      res.setHeader("Content-Type", "image/svg+xml");
+      return res.send(svg);
+  
+    } catch (err) {
+      return res.status(500).send("Something went wrong: " + err.message);
     }
-
-    // Sort
-    const sorted = Object.entries(languageStats)
-      .sort((a, b) => b[1] - a[1])
-      .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
-
-    res.json({
-      username,
-      languages: sorted
-    });
-
-  } catch (err) {
-    res.status(500).json({ error: "Internal error", details: err.message });
-  }
-});
+  });
 
 // Default
 app.get("/", (_, res) => {

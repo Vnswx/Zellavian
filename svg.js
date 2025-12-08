@@ -1,7 +1,7 @@
 import fs from "fs";
 
-const jacquardFont = fs.readFileSync("public/fonts/Jacquard12-Regular.ttf").toString("base64");
-const pixelifyFont = fs.readFileSync("public/fonts/PixelifySans.ttf").toString("base64");
+const jacquardFont = fs.readFileSync("public/fonts/Jacquard12-Regular.woff").toString("base64");
+const pixelifyFont = fs.readFileSync("public/fonts/PixelifySans.woff").toString("base64");
 
 window.generateLangCard = function (data, theme = "radical") {
   const themes = {
@@ -76,12 +76,16 @@ window.generateLangCard = function (data, theme = "radical") {
       <style>
         @font-face {
           font-family: "Jacquard 12";
-          src: url(data:font/ttf;base64,${jacquardFont}) format("truetype");
+          src: url(data:font/woff;base64,${jacquardFont}) format("woff");
+          font-weight: normal;
+          font-style: normal;
         }
 
         @font-face {
           font-family: "Pixelify Sans";
-          src: url(data:font/ttf;base64,${pixelifyFont}) format("truetype");
+          src: url(data:font/woff;base64,${pixelifyFont}) format("woff");
+          font-weight: normal;
+          font-style: normal;
         }
       </style>
 

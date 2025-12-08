@@ -1,6 +1,7 @@
 <div align="center">
 
-  ![Banner](public/img/thick.gif)
+ <img src="public/img/banner.gif" width="600" />
+
 
 </div>
 

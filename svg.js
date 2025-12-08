@@ -47,7 +47,7 @@ export function generateLangCard(data, theme = "radical") {
             stroke="${item.color}"
             stroke-width="10"
             stroke-linecap="round"
-            rotate(${i * rotationStep} 100 80)"
+            transform="rotate(${i * rotationStep} 100 80)"
           />
         `).join("")}
       </g>
@@ -66,7 +66,7 @@ export function generateLangCard(data, theme = "radical") {
     const height = 80 + langData.length * 30;
   
     return `
-    <svg width="600" height="${height}" viewBox="0 0 299 ${height}">
+     <svg width="600"  height="${height}" viewBox="0 0 299 ${height}" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Group 2">
             <g id="Group 1">
             <rect id="Rectangle 1" width="292.006" height="142" rx="2" fill="#D9D9D9"/>
@@ -86,6 +86,9 @@ export function generateLangCard(data, theme = "radical") {
             <image id="image0_3_26" href="public/img/goth1.png" data-name="goth-removebg-preview.png" width="168" height="300" preserveAspectRatio="none"/>
             <image id="image1_3_26" href="public/img/cyber1.png" data-name="cyber-removebg-preview 1.png" width="151" height="142" preserveAspectRatio="none"/>
             </svg>            
+  
+        ${labels}
+  
       </svg>
     `;
   }

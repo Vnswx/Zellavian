@@ -1,6 +1,6 @@
 <div align="center">
 
- <img src="public/img/banner.gif" width="600" />
+ <img src="public/img/thick.gif" width="600" />
 
 
 </div>

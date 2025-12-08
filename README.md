@@ -5,12 +5,13 @@
 <br>
 
 <h1>Zellavian</h1>
+
 ![Node.js](https://img.shields.io/badge/Node.js-18.x-green?style=for-the-badge&logo=node.js)
 ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
-![Issues](https://img.shields.io/github/issues/vnswx/zellavian?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/vnswx/zellavian?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/vnswx/Zellavian?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/vnswx/Zellavian?style=for-the-badge)
 
 </div>
 

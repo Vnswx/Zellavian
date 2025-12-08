@@ -9,18 +9,20 @@ export async function generateLangCard(data, theme = "radical") {
 
   const t = themes[theme] || themes.radical;
 
-  // -----------------------------
-  //  LOAD FONT DENGAN fs (WAJIB)
-  // -----------------------------
+  const cyberPath = path.join(process.cwd(), "public", "img", "cyber1.png");
+  const gothPath = path.join(process.cwd(), "public", "img", "goth1.png");
+  const thornsPath = path.join(process.cwd(), "public", "img", "thorns2.png");
+
+  const cyberImg = fs.readFileSync(cyberPath).toString("base64");
+  const gothImg = fs.readFileSync(gothPath).toString("base64");
+  const thornsImg = fs.readFileSync(thornsPath).toString("base64");
+
   const jacquardPath = path.join(process.cwd(), "public", "fonts", "Jacquard12-Regular.woff");
   const pixelifyPath = path.join(process.cwd(), "public", "fonts", "PixelifySans.woff");
 
   const jacquardFont = fs.readFileSync(jacquardPath).toString("base64");
   const pixelifyFont = fs.readFileSync(pixelifyPath).toString("base64");
 
-  // -----------------------------
-  //  GENERATE DATA
-  // -----------------------------
   const langs = Object.entries(data.languages);
   const total = langs.reduce((sum, [, bytes]) => sum + bytes, 0);
 
@@ -41,17 +43,17 @@ export async function generateLangCard(data, theme = "radical") {
   const circleSVG = `
     <g transform="translate(70, 105)">
       ${langData.map((item, i) => {
-        const startAngle = (360 / totalThorns) * i;
-        const endAngle = startAngle + (360 / totalThorns);
+    const startAngle = (360 / totalThorns) * i;
+    const endAngle = startAngle + (360 / totalThorns);
 
-        const toRad = (deg) => (deg - 90) * (Math.PI / 180);
+    const toRad = (deg) => (deg - 90) * (Math.PI / 180);
 
-        const x1 = RADIUS * Math.cos(toRad(startAngle));
-        const y1 = RADIUS * Math.sin(toRad(startAngle));
-        const x2 = RADIUS * Math.cos(toRad(endAngle));
-        const y2 = RADIUS * Math.sin(toRad(endAngle));
+    const x1 = RADIUS * Math.cos(toRad(startAngle));
+    const y1 = RADIUS * Math.sin(toRad(startAngle));
+    const x2 = RADIUS * Math.cos(toRad(endAngle));
+    const y2 = RADIUS * Math.sin(toRad(endAngle));
 
-        return `
+    return `
           <path
             d="M ${x1} ${y1} A ${RADIUS} ${RADIUS} 0 0 1 ${x2} ${y2}"
             stroke="${item.color}"
@@ -60,7 +62,7 @@ export async function generateLangCard(data, theme = "radical") {
             stroke-linecap="round"
           />
         `;
-      }).join("")}
+  }).join("")}
     </g>
   `;
 
@@ -89,16 +91,16 @@ export async function generateLangCard(data, theme = "radical") {
 
       <rect width="100%" height="100%" fill="#D9D9D9" rx="15"></rect>
 
-      <image x="70" href="/img/cyber1.png" width="221"/>
+      <image x="70" href="data:image/png;base64,${cyberImg}" width="221"/>
       <text x="105" y="35" font-size="25" fill="#464545" style="font-family: 'Jacquard 12';">
         Language Used
       </text>
 
       ${circleSVG}
 
-      <image x="-5" y="30" href="/img/thorns2.png" width="150"/>
+      <image x="-5" y="30" href="data:image/png;base64,${thornsImg}" width="150"/>
       ${labels}
-      <image x="330" y="120" href="/img/goth1.png" width="80"/>
+      <image x="330" y="120" href="data:image/png;base64,${gothImg}" width="80"/>
     </svg>
   `;
 }

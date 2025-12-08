@@ -47,7 +47,7 @@ export function generateLangCard(data, theme = "radical") {
             stroke="${item.color}"
             stroke-width="10"
             stroke-linecap="round"
-            rotate(${i * rotationStep} 50 50)"
+            rotate(${i * rotationStep} 100 80)"
           />
         `).join("")}
       </g>

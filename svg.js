@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 export async function generateLangCard(data, theme = "radical") {
   const themes = {
     radical: { bg: "#141321", text: "#ffffff", title: "#fe428e" },
@@ -6,17 +9,18 @@ export async function generateLangCard(data, theme = "radical") {
 
   const t = themes[theme] || themes.radical;
 
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+  // -----------------------------
+  //  LOAD FONT DENGAN fs (WAJIB)
+  // -----------------------------
+  const jacquardPath = path.join(process.cwd(), "public", "fonts", "Jacquard12-Regular.woff");
+  const pixelifyPath = path.join(process.cwd(), "public", "fonts", "PixelifySans.woff");
 
-  // Load fonts only once
-  const jacquardFont = await fetch(`${baseURL}/fonts/Jacquard12-Regular.woff`)
-    .then(r => r.arrayBuffer())
-    .then(b => Buffer.from(b).toString("base64"));
+  const jacquardFont = fs.readFileSync(jacquardPath).toString("base64");
+  const pixelifyFont = fs.readFileSync(pixelifyPath).toString("base64");
 
-  const pixelifyFont = await fetch(`${baseURL}/fonts/PixelifySans.woff`)
-    .then(r => r.arrayBuffer())
-    .then(b => Buffer.from(b).toString("base64"));
-
+  // -----------------------------
+  //  GENERATE DATA
+  // -----------------------------
   const langs = Object.entries(data.languages);
   const total = langs.reduce((sum, [, bytes]) => sum + bytes, 0);
 
@@ -85,16 +89,16 @@ export async function generateLangCard(data, theme = "radical") {
 
       <rect width="100%" height="100%" fill="#D9D9D9" rx="15"></rect>
 
-      <image x="70" href="public/img/cyber1.png" width="221"/>
+      <image x="70" href="/img/cyber1.png" width="221"/>
       <text x="105" y="35" font-size="25" fill="#464545" style="font-family: 'Jacquard 12';">
         Language Used
       </text>
 
       ${circleSVG}
 
-      <image x="-5" y="30" href="public/img/thorns2.png" width="150"/>
+      <image x="-5" y="30" href="/img/thorns2.png" width="150"/>
       ${labels}
-      <image x="330" y="120" href="public/img/goth1.png" width="80"/>
+      <image x="330" y="120" href="/img/goth1.png" width="80"/>
     </svg>
   `;
 }

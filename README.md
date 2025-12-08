@@ -10,6 +10,7 @@
 ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+![Badge](https://github.com/laravel/framework/workflows/tests/badge.svg)
 
 </div>
 

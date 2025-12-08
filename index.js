@@ -16,7 +16,7 @@ app.use(cors());
 const TOKEN = process.env.GITHUB_TOKEN;
 
 if (!TOKEN) {
-  console.warn("WARNING: GITHUB_TOKEN is not Devined!");
+    console.warn("WARNING: GITHUB_TOKEN is not Devined!");
 }
 
 // ===================================================================================
@@ -25,42 +25,49 @@ if (!TOKEN) {
 app.get("/api/top-langs", async (req, res) => {
     const username = req.query.username;
     const theme = req.query.theme || "radical";
-  
+
     if (!username) {
-      return res.status(400).send("username is required");
+        return res.status(400).send("username is required");
     }
-  
+
     try {
-      const repos = await fetch(
-        `https://api.github.com/users/${username}/repos?per_page=100&type=all`,
-        { headers: { Authorization: `token ${TOKEN}` } }
-      ).then(r => r.json());
-  
-      let languageStats = {};
-  
-      for (const repo of repos) {
-        const langs = await fetch(repo.languages_url, {
-          headers: { Authorization: `token ${TOKEN}` }
-        }).then(r => r.json());
-  
-        for (const [lang, bytes] of Object.entries(langs)) {
-          languageStats[lang] = (languageStats[lang] || 0) + bytes;
+        const repos = await fetch(
+            `https://api.github.com/users/${username}/repos?per_page=100&type=all`,
+            { headers: { Authorization: `token ${TOKEN}` } }
+        ).then(r => r.json());
+
+        let languageStats = {};
+
+        for (const repo of repos) {
+            const langs = await fetch(repo.languages_url, {
+                headers: { Authorization: `token ${TOKEN}` }
+            }).then(r => r.json());
+
+            for (const [lang, bytes] of Object.entries(langs)) {
+                languageStats[lang] = (languageStats[lang] || 0) + bytes;
+            }
         }
-      }
-  
-      const svg = await generateLangCard({ languages: languageStats }, theme);
-  
-      res.setHeader("Content-Type", "image/svg+xml");
-      return res.send(svg);
-  
+
+        const top4 = Object.entries(languageStats)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 4);
+
+        const top4Object = Object.fromEntries(top4);
+
+        const svg = await generateLangCard({ languages: top4Object }, theme);
+
+
+        res.setHeader("Content-Type", "image/svg+xml");
+        return res.send(svg);
+
     } catch (err) {
-      return res.status(500).send("Something went wrong: " + err.message);
+        return res.status(500).send("Something went wrong: " + err.message);
     }
-  });
+});
 
 // Default
 app.get("/", (_, res) => {
-  res.send("GitHub Stats Private API is running");
+    res.send("GitHub Stats Private API is running");
 });
 
 app.listen(3000, () => console.log("Server running"));

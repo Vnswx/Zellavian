@@ -98,7 +98,7 @@ export async function generateLangCard(data, theme = "radical") {
 
       ${circleSVG}
 
-      <image x="-15" y="30" href="data:image/png;base64,${thornsImg}" width="150"/>
+      <image x="5" y="30" href="data:image/png;base64,${thornsImg}" width="150"/>
       ${labels}
       <image x="330" y="120" href="data:image/png;base64,${gothImg}" width="80"/>
     </svg>

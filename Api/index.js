@@ -3,10 +3,13 @@ import { generateLangCard } from "./svg.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    return res.status(405).send("Method Not Allowed");
+    res.status(405).send("Method Not Allowed");
+    return;
   }
 
-  const { username, token, theme = "radical" } = req.query;
+  const username = req.query.username;
+  const token = req.query.token;
+  const theme = req.query.theme || "radical";
 
   if (!username) {
     return res.status(400).send("username is required");
@@ -42,8 +45,8 @@ export default async function handler(req, res) {
     );
 
     res.setHeader("Content-Type", "image/svg+xml");
-    return res.send(svg);
+    res.send(svg);
   } catch (err) {
-    return res.status(500).send("Error: " + err.message);
+    res.status(500).send("Something went wrong: " + err.message);
   }
 }

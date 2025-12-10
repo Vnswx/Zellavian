@@ -1,34 +1,77 @@
-import { generateLangCard } from "./svg.js";
+import express from "express";
 import fetch from "node-fetch";
+import cors from "cors";
+import { generateLangCard } from "./svg.js";
 
-export default async function handler(req, res) {
-  if (req.url.startsWith("/api/top-langs")) {
-    const url = new URL(req.url, `http://${req.headers.host}`);
-    const username = url.searchParams.get("username");
+const app = express();
+app.use(cors());
 
-    if (!username) return res.status(400).send("username is required");
 
-    const repos = await fetch(`https://api.github.com/users/${username}/repos`)
-      .then(r => r.json());
+// -----------------------------------------------------------------------------------
+// IMPORTANT NOTE:
+// Your ACCESS TOKEN is taken from the environment variable
+// Never EVER enter tokens directly into the code
+// -----------------------------------------------------------------------------------
 
-    let stats = {};
+const TOKEN = process.env.GITHUB_TOKEN;
 
-    for (const repo of repos) {
-      const lang = await fetch(repo.languages_url).then(r => r.json());
-      for (const [key, bytes] of Object.entries(lang)) {
-        stats[key] = (stats[key] || 0) + bytes;
-      }
-    }
+if (!TOKEN) {
+    console.warn("WARNING: GITHUB_TOKEN is not Devined!");
+}
 
-    const top4 = Object.entries(stats)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 4);
+// ===================================================================================
+// API: /api/top-langs
+// ===================================================================================
+app.get("/api/top-langs", async (req, res) => {
+  const username = req.query.username;
+  const token = req.query.token;
+  const theme = req.query.theme || "radical";
 
-    const svg = await generateLangCard(Object.fromEntries(top4));
-
-    res.setHeader("Content-Type", "image/svg+xml");
-    return res.send(svg);
+  if (!username) {
+      return res.status(400).send("username is required");
   }
 
-  res.send("API running");
-}
+  const headers = token 
+      ? { Authorization: `token ${token}` }
+      : {};
+
+  try {
+      const repos = await fetch(
+          `https://api.github.com/users/${username}/repos?per_page=100&type=all`,
+          { headers }
+      ).then(r => r.json());
+
+      let languageStats = {};
+
+      for (const repo of repos) {
+          const langs = await fetch(repo.languages_url, { headers })
+              .then(r => r.json());
+
+          for (const [lang, bytes] of Object.entries(langs)) {
+              languageStats[lang] = (languageStats[lang] || 0) + bytes;
+          }
+      }
+
+      const top4 = Object.entries(languageStats)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 4);
+
+      const top4Object = Object.fromEntries(top4);
+
+      const svg = await generateLangCard({ languages: top4Object }, theme);
+
+      res.setHeader("Content-Type", "image/svg+xml");
+      return res.send(svg);
+
+  } catch (err) {
+      return res.status(500).send("Something went wrong: " + err.message);
+  }
+});
+
+
+// Default
+app.get("/", (_, res) => {
+    res.send("GitHub Stats Private API is running");
+});
+
+app.listen(3000, () => console.log("Server running"));

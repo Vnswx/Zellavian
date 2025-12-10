@@ -1,8 +1,0 @@
-*.blade.php linguist-detectable=true
-*.blade.php linguist-language=Blade
-
-*.htm linguist-detectable=false
-*.html linguist-generated=true
-
-public/**/*.htm linguist-generated=true
-resources/views/**/*.htm linguist-generated=true

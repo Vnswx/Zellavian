@@ -4,7 +4,7 @@
 
 <br>
 
-<h1>Zellavian</h1>
+<h1>Zellavian.</h1>
 
 ![Node.js](https://img.shields.io/badge/Node.js-18.x-green?style=for-the-badge&logo=node.js)
 ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)
